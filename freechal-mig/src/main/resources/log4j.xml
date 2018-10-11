@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!--
+    manual: http://logging.apache.org/log4j/docs/manual.html
+
+    release시에는 build 수행시 level DEBUG를 INFO로 replace되어 카피된다.
+    (ant build file에 replace 구문 있는지 확인할 것!!)
+    -->
+
+	<!-- [Log to console] ========================================================== -->
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%d{MM-dd HH:mm:ss}] %-5p %F:%L : %m%n" />
+		</layout>
+	</appender>
+
+	<!--
+	로컬에서 appender-ref 값을 DAILY로 세팅할 경우에는 아래 file 정보를 로컬에 맞게끔 변경하여야 합니다.
+
+	%r [%t] %-5p %c %x - %m%n
+
+Mnemonic Description
+ %r Used to output the number of milliseconds elapsed from the construction of the layout until the creation of the logging event.
+ %t Used to output the name of the thread that generated the logging event.
+ %p Used to output the priority of the logging event.
+ %c Used to output the category of the logging event.
+ %x Used to output the NDC (nested diagnostic context) associated with the thread that generated the logging event.
+ %m Used to output the application supplied message associated with the logging event.
+ %n Used to output the platform-specific newline character or characters.
+	 -->
+	<!-- [Log to file] ============================================================= -->
+	<appender name="DAILY" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="datePattern" value="'.'yyyy-MM-dd-HH" />
+		<param name="file" value="c:/logs/freechal-mig/daily.log" />
+		<param name="append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%d{MM-dd HH:mm:ss}] %-5p [%t] %F:%L : %m%n" />
+		</layout>
+	</appender>
+
+
+	<logger name="com" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="DAILY" />
+	</logger>
+
+	<logger name="java.sql" additivity="false">
+		<level value="info" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	<!-- <logger name="org" additivity="false"> <level value="WARN"/> <appender-ref 
+		ref="DAILY"/> </logger> -->
+
+	<root>
+		<priority value="info" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="DAILY" />
+	</root>
+
+</log4j:configuration>

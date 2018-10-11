@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+    <!-- ======================================================== -->	
+    <!-- Handler Mapping -->
+    <!-- ======================================================== -->
+    
+    <!-- DefaultAnnotationHandlerMapping -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="order" value="0" />
+<!--         <property name="interceptors"> -->
+<!--             <ref bean="localeChangeInterceptor" />   -->
+<!--         </property> -->
+    </bean>
+
+	 
+    <!-- ======================================================== -->
+    <!-- Handler Apapter -->
+    <!-- ======================================================== -->
+
+    
+    <!-- AnnotationMethodHandlerAdapter -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+<!--         <property name="webBindingInitializer">
+            <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+                <property name="validator" ref="validator" />
+                <property name="conversionService" ref="conversionService"/>
+            </bean>
+        </property> -->
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter" >
+                    <property name="writeAcceptCharset" value="false"/>
+                </bean>
+                <bean class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
+                <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- ======================================================== -->
+    <!-- Locale Resolver -->
+    <!-- ======================================================== -->
+    
+    <!-- CookieLocaleResolver -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="ko"/>
+    </bean>
+
+
+    <!-- ======================================================== -->
+    <!-- View Resolver -->
+    <!-- ======================================================== -->
+ 
+    <!-- ContentNegotiatingViewResolver -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        
+        <!-- Mdedia Type 설정 -->
+	    <property name="mediaTypes">
+		    <map>
+			    <entry key="html" value="text/html"/>
+			    <entry key="json" value="application/json"/>
+			    <entry key="xml" value="application/xml" />
+		    </map>
+	    </property>
+	    
+	    <!-- View Resolver 설정 -->
+	    <property name="viewResolvers">
+		    <list>
+			    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			      <property name="prefix" value="/WEB-INF/views/"/>
+			      <property name="suffix" value=".jsp"/>
+			    </bean>
+		    </list>
+	    </property>
+	    
+	    <!-- Default View 설정 -->
+	    <property name="defaultViews">
+		    <list>
+		    </list>
+	    </property>
+	    
+    </bean>
+</beans>
